@@ -3,10 +3,10 @@ import nodemon from 'nodemon-webpack-plugin'
 import { resolve } from 'path'
 
 const paths = {
-  entrys: {
+  entry: {
     root: resolve(__dirname),
     src: resolve(__dirname, 'src'),
-    server: resolve(__dirname, 'src', 'app.js')
+    server: resolve(__dirname, 'src', 'server.ts')
   },
   output: resolve(__dirname, 'build')
 }
@@ -16,22 +16,27 @@ export default {
   externals: externals(),
   target: 'node',
   entry: {
-    server: paths.entrys.server
+    server: paths.entry.server
   },
   output: {
     filename: '[name].js',
     path: paths.output
   },
   resolve: {
-    modules: [paths.entrys.root, 'node_modules'],
-    extensions: ['.js', '.json'],
+    modules: [paths.entry.root, 'node_modules'],
+    extensions: ['js', '.ts', '.json'],
     alias: {
-      '@': paths.entrys.root,
-      '@@': paths.entrys.src
+      '~': paths.entry.root,
+      '~~': paths.entry.src
     }
   },
   module: {
     rules: [
+      {
+        test: /\.tsx?$/,
+        exclude: [/node_modules/],
+        loader: "ts-loader"
+      },
       {
         test: /\.js$/,
         exclude: /node_modules/,
