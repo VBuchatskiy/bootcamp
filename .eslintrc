@@ -10,11 +10,7 @@
   },
   "rules": {
     "indent": [
-      "warn",
-      2,
-      {
-        "SwitchCase": 1
-      }
+      "warn"
     ],
     "linebreak-style": [
       "warn",
@@ -36,6 +32,6 @@
       "warn",
       "always"
     ],
-    "no-console": "off"
+    "no-console": "warn"
   }
 }
