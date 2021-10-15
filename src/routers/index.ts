@@ -1,5 +1,2 @@
-import user from './user'
-
-export {
-  user
-}
+export { auth } from './auth'
+export { bootcamps } from './bootcamps'

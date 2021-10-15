@@ -1,16 +1,23 @@
 import express from 'express'
 import cors from 'cors'
 import chalk from 'chalk'
-import { connect } from "../config";
-import { user } from './routers'
+import morgan from 'morgan'
+import { connect } from '../config'
+import { auth, bootcamps } from './routers'
 import { port } from '../config/config.json'
-
-connect()
 
 const app = express()
 
+connect()
+
 app.use(cors())
-app.use('/user', user)
+
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'))
+}
+
+app.use('/api/v1/auth', auth)
+app.use('/api/v1/bootcamps', bootcamps)
 
 const server = app.listen(port, () => {
   chalk.cyan(`http://localhost:${port}/`)
