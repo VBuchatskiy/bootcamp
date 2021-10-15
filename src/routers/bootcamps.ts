@@ -5,7 +5,7 @@ import {
   createBootcamp,
   updateBootcamp,
   deleteBootcamp,
-} from '../controllers/bootcamps'
+} from '../controllers'
 
 export const bootcamps = Router()
 
