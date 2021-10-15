@@ -1,14 +1,23 @@
 import express from 'express'
 import cors from 'cors'
 import chalk from 'chalk'
+import { connect } from "../config";
 import { user } from './routers'
 import { port } from '../config/config.json'
 
-const app = express()
-app.use(cors())
+connect()
 
+const app = express()
+
+app.use(cors())
 app.use('/user', user)
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   chalk.cyan(`http://localhost:${port}/`)
+})
+
+// handle promise rejection
+
+process.on('unhandledRejection', () => {
+  server.close(() => process.exit(1))
 })
