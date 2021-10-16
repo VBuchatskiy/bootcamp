@@ -1,14 +1,37 @@
-import express from 'express'
+import express, { json } from 'express'
 import cors from 'cors'
 import chalk from 'chalk'
-import { user } from './routers'
+import { logger, errorHandler } from "./middleware";
+import { connect } from '../config'
+import { auth, bootcamps } from './routers'
 import { port } from '../config/config.json'
 
 const app = express()
+
+// Connect db
+connect()
+
 app.use(cors())
+app.use(json())
 
-app.use('/user', user)
+// Create logger
+if (process.env.NODE_ENV === 'development') {
+  app.use(logger)
+}
 
-app.listen(port, () => {
+// Mount Routes
+app.use('/api/v1/auth', auth)
+app.use('/api/v1/bootcamps', bootcamps)
+
+// handle error
+app.use(errorHandler)
+
+
+const server = app.listen(port, () => {
   chalk.cyan(`http://localhost:${port}/`)
+})
+
+// handle promise rejection
+process.on('unhandledRejection', () => {
+  server.close(() => process.exit(1))
 })
