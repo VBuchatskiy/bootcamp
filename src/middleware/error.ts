@@ -1,6 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import { ErrorResponse } from "../utils";
+import { CastError } from "mongoose";
 
-export const errorHandler = (error: ErrorResponse, request: Request, response: Response, next: NextFunction) => {
-  response.status(400).json({ message: error.message })
+export const errorHandler = (error: CastError, request: Request, response: Response, next: NextFunction) => {
+  const { name, message } = error
+  const { params } = request
+  const { statusCode } = response
+
+  response.status(statusCode).json({ name, message, params })
 }

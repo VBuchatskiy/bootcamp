@@ -1,39 +1,60 @@
 import { Request, Response, NextFunction } from 'express';
-import { ErrorResponse } from '../utils';
-import { Bootcamp } from "../models";;
+import { asyncHandler } from "../middleware";
+import { Bootcamp } from "../models";
 
-export const getBootcamps = async (request: Request, response: Response) => { };
+export const getBootcamps = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+  const { statusCode } = response
+  const bootcamps = await Bootcamp.find()
+  const { length: count } = bootcamps
 
-export const getBootcamp = async (request: Request, response: Response, next: NextFunction) => {
-  try {
-    const { id } = request.params
-    const bootcamp = await Bootcamp.findById(id)
-  } catch (error) {
-    next(error)
-  }
-};
+  response.status(statusCode).json({
+    data: { bootcamps, count }
+  });
+});
 
-export const createBootcamp = async (request: Request, response: Response) => {
+export const getBootcamp = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+  const { statusCode } = response
+  const { params } = request
+  const { id } = params
+  const bootcamp = await Bootcamp.findById(id)
 
-  try {
-    const { body } = request;
-    const { status } = response
+  response.status(statusCode).json({
+    bootcamp
+  });
+});
 
-    const bootcamp = await Bootcamp.create(body)
+export const createBootcamp = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+  const { statusCode } = response
+  const { body } = request;
 
-    status(201).json({
-      data: bootcamp
-    })
-  } catch (error: any) {
-    throw new Error(error)
-  }
+  const bootcamp = await Bootcamp.create(body)
 
-};
+  response.status(statusCode).json({
+    bootcamp
+  });
+});
 
-export const updateBootcamp = (request: Request, response: Response) => {
-  response.status(200).json({ message: `get collection ${request.params}` })
-}
+export const updateBootcamp = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+  const { statusCode } = response
+  const { body } = request;
+  const { params } = request
+  const { id } = params
 
-export const deleteBootcamp = (request: Request, response: Response) => {
-  response.status(200).json({ message: `get collection ${request.params}` })
-}
+  const bootcamp = await Bootcamp.findByIdAndUpdate(id, body)
+
+  response.status(statusCode).json({
+    bootcamp
+  });
+});
+
+export const deleteBootcamp = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+  const { statusCode } = response
+  const { params } = request
+  const { id } = params
+
+  const bootcamp = await Bootcamp.findByIdAndDelete(id)
+
+  response.status(statusCode).json({
+    bootcamp
+  });
+});
