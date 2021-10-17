@@ -4,11 +4,24 @@ import { Bootcamp } from "../models";
 
 export const getBootcamps = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
-  const bootcamps = await Bootcamp.find()
-  const { length: count } = bootcamps
+  const { query } = request
+
+  // pagination
+  const limit: number = query.limit ? parseInt(query.limit as string, 10) : 10
+  const page: number = query.page ? parseInt(query.page as string, 10) : 1
+  const offset: number = page !== 1 ? page * limit : 0
+  const itemCount: number = await Bootcamp.count()
+  const pageCount: number = itemCount ? Math.floor(itemCount / limit) ? Math.floor(itemCount / limit) : 1 : 0
+
+  const items = await Bootcamp
+    .find()
+    .limit(limit)
+    .skip(offset)
 
   response.status(statusCode).json({
-    data: { bootcamps, count }
+    items,
+    itemCount,
+    pageCount
   });
 });
 
@@ -16,10 +29,11 @@ export const getBootcamp = asyncHandler(async (request: Request, response: Respo
   const { statusCode } = response
   const { params } = request
   const { id } = params
-  const bootcamp = await Bootcamp.findById(id)
+
+  const item = await Bootcamp.findById(id)
 
   response.status(statusCode).json({
-    bootcamp
+    item
   });
 });
 
@@ -27,10 +41,10 @@ export const createBootcamp = asyncHandler(async (request: Request, response: Re
   const { statusCode } = response
   const { body } = request;
 
-  const bootcamp = await Bootcamp.create(body)
+  const item = await Bootcamp.create(body)
 
   response.status(statusCode).json({
-    bootcamp
+    item
   });
 });
 
@@ -40,10 +54,12 @@ export const updateBootcamp = asyncHandler(async (request: Request, response: Re
   const { params } = request
   const { id } = params
 
-  const bootcamp = await Bootcamp.findByIdAndUpdate(id, body)
+  const item = await Bootcamp.findByIdAndUpdate(id, body, {
+    new: true
+  })
 
   response.status(statusCode).json({
-    bootcamp
+    item
   });
 });
 
@@ -52,9 +68,7 @@ export const deleteBootcamp = asyncHandler(async (request: Request, response: Re
   const { params } = request
   const { id } = params
 
-  const bootcamp = await Bootcamp.findByIdAndDelete(id)
+  await Bootcamp.findByIdAndDelete(id)
 
-  response.status(statusCode).json({
-    bootcamp
-  });
+  response.status(statusCode)
 });
