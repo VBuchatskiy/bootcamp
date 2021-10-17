@@ -22,8 +22,7 @@ export const getBootcamps = asyncHandler(async (request: Request, response: Resp
   response.status(statusCode).json({
     items,
     itemCount,
-    pageCount,
-    page
+    pageCount
   });
 });
 
