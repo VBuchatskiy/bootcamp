@@ -10,7 +10,7 @@ export const getBootcamps = asyncHandler(async (request: Request, response: Resp
   // pagination
   const limit: number = query.limit ? parseInt(query.limit as string, 10) : LIMIT
   const page: number = query.page ? parseInt(query.page as string, 10) : PAGE
-  const offset: number = page !== 1 ? page * limit : 0
+  const offset: number = (page - 1) * limit;
   const itemCount: number = await Bootcamp.count()
   const pageCount: number = itemCount ? Math.floor(itemCount / limit) ? Math.floor(itemCount / limit) : 1 : 0
 
@@ -22,7 +22,8 @@ export const getBootcamps = asyncHandler(async (request: Request, response: Resp
   response.status(statusCode).json({
     items,
     itemCount,
-    pageCount
+    pageCount,
+    page
   });
 });
 
