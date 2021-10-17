@@ -1,14 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { asyncHandler } from "../middleware";
 import { Bootcamp } from "../models";
+import { LIMIT, PAGE } from './constants'
 
 export const getBootcamps = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { query } = request
 
   // pagination
-  const limit: number = query.limit ? parseInt(query.limit as string, 10) : 10
-  const page: number = query.page ? parseInt(query.page as string, 10) : 1
+  const limit: number = query.limit ? parseInt(query.limit as string, 10) : LIMIT
+  const page: number = query.page ? parseInt(query.page as string, 10) : PAGE
   const offset: number = page !== 1 ? page * limit : 0
   const itemCount: number = await Bootcamp.count()
   const pageCount: number = itemCount ? Math.floor(itemCount / limit) ? Math.floor(itemCount / limit) : 1 : 0
