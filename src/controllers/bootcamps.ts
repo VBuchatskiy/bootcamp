@@ -14,10 +14,24 @@ export const getBootcamps = asyncHandler(async (request: Request, response: Resp
   const itemCount: number = await Bootcamp.count()
   const pageCount: number = itemCount ? Math.floor(itemCount / limit) ? Math.floor(itemCount / limit) : 1 : 0
 
+  // TODO move to helpers
+  // sort=name%desc+age%asc
+  const parseSortParams = ($query: string): any => {
+    return $query.replace(/asc/g, '1').replace(/desc/g, '-1').split(' ').map(item => item.split('%'))
+  }
+
+  // select=name+age
+  const parseSelectParams = ($query: string): any => {
+    return $query.split(' ');
+  }
+  // TODO move to helpers
+
   const items = await Bootcamp
     .find()
-    .limit(limit)
     .skip(offset)
+    .limit(limit)
+    .sort(query.sort ? parseSortParams(query.sort as string) : [])
+    .select(query.select ? parseSelectParams(query.select as string) : {})
 
   response.status(statusCode).json({
     items,
