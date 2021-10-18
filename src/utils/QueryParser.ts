@@ -8,7 +8,7 @@ export const parseSelectParams = (query: string): string[] => {
   return query.split(' ');
 }
 
-export const parsePagination = (query: any, count: number): any => {
+export const parsePagination = (query: { page?: string, limit?: string }, count: number): { limit: number, offset: number, pageCount: number } => {
   const page: number = query.page ? parseInt(query.page as string, 10) : PAGE
   const limit: number = query.limit ? parseInt(query.limit as string, 10) : LIMIT
   const offset: number = (page - 1) * limit;
