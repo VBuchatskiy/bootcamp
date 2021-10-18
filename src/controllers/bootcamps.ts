@@ -3,6 +3,7 @@ import { asyncHandler } from "../middleware";
 import { Bootcamp } from "../models";
 import { LIMIT, PAGE } from './constants'
 
+
 export const getBootcamps = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { query } = request
@@ -14,9 +15,16 @@ export const getBootcamps = asyncHandler(async (request: Request, response: Resp
   const itemCount: number = await Bootcamp.count()
   const pageCount: number = itemCount ? Math.floor(itemCount / limit) ? Math.floor(itemCount / limit) : 1 : 0
 
+  // sort options
+  // TODO move to helpers
+  const getSortParams = ($query: string): any => {
+    return $query.replace(/asc/g, '1').replace(/desc/g, '-1').split(' ').map(item => item.split('%'))
+  }
+
   const items = await Bootcamp
     .find()
     .limit(limit)
+    .sort(query.sort ? getSortParams(query.sort as string) : {})
     .skip(offset)
 
   response.status(statusCode).json({
