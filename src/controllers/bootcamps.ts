@@ -3,7 +3,6 @@ import { asyncHandler } from "../middleware";
 import { Bootcamp } from "../models";
 import { LIMIT, PAGE } from './constants'
 
-
 export const getBootcamps = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { query } = request
