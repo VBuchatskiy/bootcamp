@@ -1,23 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
 import { asyncHandler } from "../middleware";
-import { Bootcamp } from "../models";
+import { Course } from "../models";
 import { parseSortParams, parseSelectParams, parsePagination } from "../utils"
 
-// @desc Get bootcamps
-// @route GET /api/v1/bootcamps
+// @desc Get Courses
+// @route GET /api/v1/bootcamps/:bootcampId/courses
 // @sort sort sort=name%asc+age%desc
 // @access public
 
-export const getBootcamps = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
-  const itemCount: number = await Bootcamp.count()
+export const getCourses = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+  const itemCount: number = await Course.count()
   const { statusCode } = response
   const { query } = request
   const { offset, limit, pageCount } = parsePagination(query, itemCount)
 
-  const items = await Bootcamp
-    .find({
-      price: 200
-    })
+  const items = await Course
+    .find(query.bootcampId ? { bootcamp: query.bootcampId } : {})
     .skip(offset)
     .limit(limit)
     .sort(query.sort ? parseSortParams(query.sort as string) : [])
@@ -31,15 +29,15 @@ export const getBootcamps = asyncHandler(async (request: Request, response: Resp
 });
 
 // @desc Get Bootcamp by id
-// @route Get /api/v1/bootcamps/:id
+// @route Get /api/v1/courses/:id
 // @access public
 
-export const getBootcamp = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+export const getCourse = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { params } = request
   const { id } = params
 
-  const item = await Bootcamp.findById(id)
+  const item = await Course.findById(id)
 
   response.status(statusCode).json({
     item
@@ -47,31 +45,27 @@ export const getBootcamp = asyncHandler(async (request: Request, response: Respo
 });
 
 // @desc Create Bootcamp
-// @route Post /api/v1/bootcamps
+// @route Post /api/v1/courses
 // @access private
 
-export const createBootcamp = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+export const createCourse = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { body } = request;
 
-  const item = await Bootcamp.create(body)
+  const item = await Course.create(body)
 
   response.status(statusCode).json({
     item
   });
 });
 
-// @desc Update Bootcamp by id
-// @route Put /api/v1/bootcamps
-// @access private
-
-export const updateBootcamp = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+export const updateCourse = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { body } = request;
   const { params } = request
   const { id } = params
 
-  const item = await Bootcamp.findByIdAndUpdate(id, body, {
+  const item = await Course.findByIdAndUpdate(id, body, {
     new: true
   })
 
@@ -80,16 +74,12 @@ export const updateBootcamp = asyncHandler(async (request: Request, response: Re
   });
 });
 
-// @desc Delete Bootcamp by id
-// @route Delete /api/v1/bootcamps/:id
-// @access private
-
-export const deleteBootcamp = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+export const deleteCourse = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { params } = request
   const { id } = params
 
-  await Bootcamp.findByIdAndDelete(id)
+  await Course.findByIdAndDelete(id)
 
   response.status(statusCode)
 });

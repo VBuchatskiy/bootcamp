@@ -1,32 +1,29 @@
 import { Schema, model } from "mongoose";
 
-const BootCampSchema = new Schema({
+const BootcampSchema = new Schema({
   slug: String,
   name: {
     type: String,
-    required: [true, 'Pleas provide a name'],
-    unique: true,
     trim: true,
+    unique: true,
+    required: [true, 'Pleas provide a name'],
     maxlength: [50, 'Name can`t be more than 50 characters']
   },
   description: {
     type: String,
     required: [true, 'Pleas provide a description'],
-    maxlength: [500, 'Description can`t be more than 50 characters']
+    maxlength: [500, 'Description can`t be more than 500 characters']
   },
   price: {
     type: Number,
     required: [true, 'Pleas provide a price'],
     min: [0, 'Price con`t be less than 0'],
   },
-  remote: {
-    type: Boolean,
-  },
   create_at: {
     type: Number,
-    default: new Date().getTime()
+    default: Date.now()
   }
 })
 
-export const Bootcamp = model('Bootcamp', BootCampSchema)
+export const Bootcamp = model('Bootcamp', BootcampSchema)
 
