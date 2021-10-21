@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { asyncHandler } from "../middleware";
 import { Bootcamp } from "../models";
-import { parseSortParams, parseSelectParams, parsePagination } from "../utils"
+import { parseSortParams, parseSelectParams, parsePaginationParams, parseFilterParams } from "../utils"
 
 // @desc Get bootcamps
 // @route GET /api/v1/bootcamps
@@ -12,12 +12,10 @@ export const getBootcamps = asyncHandler(async (request: Request, response: Resp
   const itemCount: number = await Bootcamp.count()
   const { statusCode } = response
   const { query } = request
-  const { offset, limit, pageCount } = parsePagination(query, itemCount)
+  const { offset, limit, pageCount } = parsePaginationParams(query, itemCount)
 
   const items = await Bootcamp
-    .find({
-      price: 200
-    })
+    .find(query.filter ? parseFilterParams(query.sort as string) : {})
     .skip(offset)
     .limit(limit)
     .sort(query.sort ? parseSortParams(query.sort as string) : [])

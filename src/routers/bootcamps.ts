@@ -6,11 +6,11 @@ import {
   updateBootcamp,
   deleteBootcamp,
 } from '../controllers'
-import { courses } from '../routers'
+import { courses } from './courses'
 
-export const bootcamps = Router()
+const bootcamps = Router()
 
-bootcamps.use('/:bootcampId/courses', courses)
+bootcamps.use('/:bootcampsId/courses', courses)
 
 bootcamps
   .route('/')
@@ -22,3 +22,8 @@ bootcamps
   .get(getBootcamp)
   .put(updateBootcamp)
   .delete(deleteBootcamp)
+
+
+export {
+  bootcamps
+}
