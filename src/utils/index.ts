@@ -1,1 +1,1 @@
-export { parseSortParams, parseSelectParams, parsePagination } from './QueryParser'
+export { parseSortParams, parseSelectParams, parsePagination } from './queryParser'

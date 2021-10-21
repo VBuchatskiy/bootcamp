@@ -6,8 +6,11 @@ import {
   updateBootcamp,
   deleteBootcamp,
 } from '../controllers'
+import { courses } from '../routers'
 
 export const bootcamps = Router()
+
+bootcamps.use('/:bootcampId/courses', courses)
 
 bootcamps
   .route('/')

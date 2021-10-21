@@ -3,7 +3,7 @@ import cors from 'cors'
 import chalk from 'chalk'
 import { logger, errorHandler } from "./middleware";
 import { connect } from '../config'
-import { auth, bootcamps } from './routers'
+import { auth, bootcamps, courses } from './routers'
 import { port } from '../config/config.json'
 
 const app = express()
@@ -22,6 +22,7 @@ if (process.env.NODE_ENV === 'development') {
 // Mount Routes
 app.use('/api/v1/auth', auth)
 app.use('/api/v1/bootcamps', bootcamps)
+app.use('/api/v1/courses', courses)
 
 // handle error
 app.use(errorHandler)
