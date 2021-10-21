@@ -12,10 +12,10 @@ export const parseSelectParams = (query: string): string[] => {
 }
 
 export const parseFilterParams = (query: string): any => {
-  return query.replace(/\b(gte|lte )\b/g, (match: string) => `$${match}`).split('');
+  return query.replace(/\b(gte|lte|in)\b/g, (match: string) => `$${match}`).split(paramsDelimiter);
 }
 
-export const parsePagination = (query: { page?: string, limit?: string }, count: number): { limit: number, offset: number, pageCount: number } => {
+export const parsePaginationParams = (query: { page?: string, limit?: string }, count: number): { limit: number, offset: number, pageCount: number } => {
   const page: number = query.page ? parseInt(query.page as string, 10) : PAGE
   const limit: number = query.limit ? parseInt(query.limit as string, 10) : LIMIT
   const offset: number = (page - 1) * limit;

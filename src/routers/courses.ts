@@ -7,7 +7,7 @@ import {
   deleteCourse,
 } from '../controllers'
 
-export const courses = Router({
+const courses = Router({
   mergeParams: true
 })
 
@@ -21,3 +21,7 @@ courses
   .get(getCourse)
   .put(updateCourse)
   .delete(deleteCourse)
+
+export {
+  courses
+}
