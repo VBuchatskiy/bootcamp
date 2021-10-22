@@ -16,6 +16,7 @@ export const getBootcamps = asyncHandler(async (request: Request, response: Resp
 
   const items = await Bootcamp
     .find(query.filter ? parseFilterParams(query.sort as string) : {})
+    .populate('courses')
     .skip(offset)
     .limit(limit)
     .sort(query.sort ? parseSortParams(query.sort as string) : [])
@@ -70,7 +71,8 @@ export const updateBootcamp = asyncHandler(async (request: Request, response: Re
   const { id } = params
 
   const item = await Bootcamp.findByIdAndUpdate(id, body, {
-    new: true
+    new: true,
+    runValidators: true
   })
 
   response.status(statusCode).json({
@@ -87,7 +89,13 @@ export const deleteBootcamp = asyncHandler(async (request: Request, response: Re
   const { params } = request
   const { id } = params
 
-  await Bootcamp.findByIdAndDelete(id)
+  const item = await Bootcamp.findById(id)
 
-  response.status(statusCode)
+  if (!item) {
+    return next({ message: 'course not found' })
+  }
+
+  item.remove()
+
+  response.status(statusCode).send({})
 });
