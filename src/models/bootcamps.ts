@@ -1,6 +1,13 @@
 import { Schema, model } from "mongoose";
 
-const BootcampSchema = new Schema({
+interface IBootcamp {
+  slug: string;
+  name: string;
+  description: string;
+  create_at: number
+}
+
+const BootcampSchema = new Schema<IBootcamp>({
   slug: String,
   name: {
     type: String,
@@ -14,15 +21,29 @@ const BootcampSchema = new Schema({
     required: [true, 'Pleas provide a description'],
     maxlength: [500, 'Description can`t be more than 500 characters']
   },
-  price: {
-    type: Number,
-    required: [true, 'Pleas provide a price'],
-    min: [0, 'Price con`t be less than 0'],
-  },
   create_at: {
     type: Number,
     default: Date.now()
   }
+}, {
+  toJSON: {
+    virtuals: true
+  },
+  toObject: {
+    virtuals: true
+  }
+})
+
+BootcampSchema.virtual('courses', {
+  ref: 'Course',
+  localField: '_id',
+  foreignField: 'bootcamp',
+  justOne: false
+})
+
+BootcampSchema.pre("remove", async function (next) {
+  await this.model('Course').deleteMany({ bootcamp: this._id })
+  next()
 })
 
 export const Bootcamp = model('Bootcamp', BootcampSchema)

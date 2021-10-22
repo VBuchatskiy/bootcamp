@@ -1,6 +1,22 @@
 import { Schema, model } from "mongoose";
 
-const CourseSchema = new Schema({
+enum skills {
+  beginner = 1,
+  intermediate = 2,
+  advanced = 3
+}
+
+interface ICourse {
+  slug: string;
+  name: string;
+  description: string;
+  create_at: number;
+  skills: string[skills];
+  cost: number,
+  bootcamp?: any
+}
+
+const CourseSchema = new Schema<ICourse>({
   slug: String,
   name: {
     type: String,
@@ -29,10 +45,10 @@ const CourseSchema = new Schema({
     default: Date.now()
   },
   bootcamp: {
-    type:  Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Bootcamp',
     required: true
-  }
+  },
 })
 
 export const Course = model('Course', CourseSchema)

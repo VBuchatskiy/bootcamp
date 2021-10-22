@@ -10,7 +10,7 @@ import { courses } from './courses'
 
 const bootcamps = Router()
 
-bootcamps.use('/:bootcampsId/courses', courses)
+bootcamps.use('/:bid/courses', courses)
 
 bootcamps
   .route('/')

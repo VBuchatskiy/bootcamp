@@ -15,8 +15,12 @@ export const getCourses = asyncHandler(async (request: Request, response: Respon
   const { offset, limit, pageCount } = parsePaginationParams(query, itemCount)
 
   const items = await Course
-    .find(query.bootcampId ? { bootcamp: query.bootcampId } : {})
+    .find(query.bid ? { bootcamp: query.bid } : {})
     .find(query.filter ? parseFilterParams(query.sort as string) : {})
+    .populate(!query.bid ? {
+      path: 'bootcamp',
+      select: 'name'
+    } : '')
     .skip(offset)
     .limit(limit)
     .sort(query.sort ? parseSortParams(query.sort as string) : [])
@@ -29,7 +33,7 @@ export const getCourses = asyncHandler(async (request: Request, response: Respon
   });
 });
 
-// @desc Get Bootcamp by id
+// @desc Get Course by id
 // @route Get /api/v1/courses/:id
 // @access public
 
@@ -45,7 +49,7 @@ export const getCourse = asyncHandler(async (request: Request, response: Respons
   });
 });
 
-// @desc Create Bootcamp
+// @desc Create Course
 // @route Post /api/v1/courses
 // @access private
 
@@ -60,6 +64,11 @@ export const createCourse = asyncHandler(async (request: Request, response: Resp
   });
 });
 
+// @desc Update Course
+// @route Post /api/v1/courses
+// @access private
+
+
 export const updateCourse = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { body } = request;
@@ -67,7 +76,8 @@ export const updateCourse = asyncHandler(async (request: Request, response: Resp
   const { id } = params
 
   const item = await Course.findByIdAndUpdate(id, body, {
-    new: true
+    new: true,
+    runValidators: true
   })
 
   response.status(statusCode).json({
@@ -75,12 +85,22 @@ export const updateCourse = asyncHandler(async (request: Request, response: Resp
   });
 });
 
+// @desc Delete Course
+// @route Post /api/v1/courses
+// @access private
+
 export const deleteCourse = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { params } = request
   const { id } = params
 
-  await Course.findByIdAndDelete(id)
+  const course = await Course.findById(id)
 
-  response.status(statusCode)
+  if (!course) {
+    return next({ message: 'course not found' })
+  }
+
+  course.remove()
+
+  response.status(statusCode).send({})
 });
