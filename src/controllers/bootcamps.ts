@@ -8,7 +8,7 @@ import { parseSortParams, parseSelectParams, parsePaginationParams, parseFilterP
 // @sort sort sort=name%asc+age%desc
 // @access public
 
-export const getBootcamps = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+export const getBootcamps = asyncHandler(async (request: Request, response: Response) => {
   const itemCount: number = await Bootcamp.count()
   const { statusCode } = response
   const { query } = request
@@ -33,7 +33,7 @@ export const getBootcamps = asyncHandler(async (request: Request, response: Resp
 // @route Get /api/v1/bootcamps/:id
 // @access public
 
-export const getBootcamp = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+export const getBootcamp = asyncHandler(async (request: Request, response: Response) => {
   const { statusCode } = response
   const { params } = request
   const { id } = params
@@ -49,7 +49,7 @@ export const getBootcamp = asyncHandler(async (request: Request, response: Respo
 // @route Post /api/v1/bootcamps
 // @access private
 
-export const createBootcamp = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+export const createBootcamp = asyncHandler(async (request: Request, response: Response) => {
   const { statusCode } = response
   const { body } = request;
 

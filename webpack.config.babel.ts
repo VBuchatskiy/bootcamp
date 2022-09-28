@@ -1,5 +1,6 @@
 import externals from 'webpack-node-externals'
 import nodemon from 'nodemon-webpack-plugin'
+import dotenv from 'dotenv-webpack'
 import { resolve } from 'path'
 
 const paths = {
@@ -27,14 +28,14 @@ export default {
     extensions: ['js', '.ts', '.json'],
     alias: {
       '~': paths.entry.root,
-      '~~': paths.entry.src
+      '@': paths.entry.src
     }
   },
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        exclude: [/node_modules/],
+        exclude: /node_modules/,
         loader: "ts-loader"
       },
       {
@@ -50,15 +51,20 @@ export default {
       }
     ]
   },
-  watch: true,
-  watchOptions: {
-    ignored: /node_modules/
-  },
   stats: {
     colors: true,
     env: true
   },
   plugins: [
-    new nodemon()
-  ]
+    new nodemon({
+      env: {
+        NODE_ENV: 'development',
+      },
+    }),
+    new dotenv()
+  ],
+  watchOptions: {
+    ignored: /node_modules/
+  },
+  watch: true,
 }

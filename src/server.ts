@@ -4,7 +4,6 @@ import chalk from 'chalk'
 import { logger, errorHandler } from "./middleware";
 import { connect } from '../config'
 import { auth, bootcamps, courses } from './routers'
-import { port } from '../config/config.json'
 
 const app = express()
 
@@ -28,8 +27,8 @@ app.use('/api/v1/courses', courses)
 app.use(errorHandler)
 
 
-const server = app.listen(port, () => {
-  chalk.cyan(`http://localhost:${port}/`)
+const server = app.listen(process.env.port, () => {
+  chalk.cyan(`http://localhost:${process.env.port}/`)
 })
 
 // handle promise rejection
