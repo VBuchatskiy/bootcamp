@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
-import { TBootcamp } from "./types";
+import { IBootcamp } from "./types";
 
-const BootcampSchema = new Schema<TBootcamp>({
+const BootcampSchema = new Schema<IBootcamp>({
   name: {
     type: String,
     trim: true,
@@ -15,27 +15,26 @@ const BootcampSchema = new Schema<TBootcamp>({
     maxlength: [500, 'Description can`t be more than 500 characters']
   },
   create_at: {
-    type: Number,
+    type: Number, 
     default: Date.now()
   }
 }, {
+  id: false,
   toJSON: {
-    virtuals: true
+    virtuals: true,
+    versionKey:false,
+    transform: function (doc, ret) {
+      Object.assign(ret, { bid: ret._id})
+      delete ret._id  
+    }
   },
   toObject: {
     virtuals: true
-  }
+  },
 })
 
-BootcampSchema.virtual('courses', {
-  ref: 'Course',
-  localField: '_id',
-  foreignField: 'bootcamp',
-  justOne: false
-})
-
-BootcampSchema.pre("remove", async function (next) {
-  await this.model('Course').deleteMany({ bootcamp: this._id })
+BootcampSchema.pre('remove', async function(next) {
+  await this.model('Course').deleteMany({ bid: this._id })
   next()
 })
 

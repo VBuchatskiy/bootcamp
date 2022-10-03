@@ -9,27 +9,11 @@ import { Bootcamp } from "@/models";
 
 export const getBootcamps = async(async (request: Request, response: Response) => {
   const { statusCode } = response
-  const { query } = request
-  const { sort_by, page, per_page } = query
 
-  const total = await Bootcamp.count()
-  const limit = per_page && per_page ? parseInt(per_page as string, 10) : 10 
-  const skip = page && parseInt(page as string, 10) === 1 ? 0 : (limit * parseInt(page as string, 10) - 1)
-  const sort = sort_by ? sort_by : '-create_at'
-
-  const bootcamps = await Bootcamp
-  .find()
-  .skip(skip)
-  .limit(limit)
-  .sort(sort)
+  const bootcamps = await Bootcamp.find()
 
   response.status(statusCode).json({
     bootcamps,
-    pagination: {
-      page: page ? parseInt(page as string, 10) : 1,
-      per_page: per_page ? parseInt(per_page as string, 10) : 1,
-      total,
-    }
   });
 });
 
@@ -109,7 +93,5 @@ export const deleteBootcamp = async(async (request: Request, response: Response,
 
   bootcamp.remove()
 
-  response.status(statusCode).send({
-    status: statusCode
-  })
+  response.status(statusCode).send()
 });

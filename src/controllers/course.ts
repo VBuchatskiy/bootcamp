@@ -27,10 +27,14 @@ export const getCourse = async(async (request: Request, response: Response, next
   const { params } = request
   const { id } = params
 
-  const item = await Course.findById(id)
+  const course = await Course.findById(id)
+
+  if(!course) {
+    return next({ message: 'course not found' })
+  }
 
   response.status(statusCode).json({
-    item
+    course
   });
 });
 
@@ -42,10 +46,10 @@ export const createCourse = async(async (request: Request, response: Response, n
   const { statusCode } = response
   const { body } = request;
 
-  const item = await Course.create(body)
+  const course = await Course.create(body)
 
   response.status(statusCode).json({
-    item
+    course
   });
 });
 
@@ -60,13 +64,17 @@ export const updateCourse = async(async (request: Request, response: Response, n
   const { params } = request
   const { id } = params
 
-  const item = await Course.findByIdAndUpdate(id, body, {
+  const course = await Course.findByIdAndUpdate(id, body, {
     new: true,
     runValidators: true
   })
 
+  if(!course) {
+    return next({ message: 'course not found' })
+  }
+
   response.status(statusCode).json({
-    item
+    course
   });
 });
 
@@ -87,5 +95,5 @@ export const deleteCourse = async(async (request: Request, response: Response, n
 
   course.remove()
 
-  response.status(statusCode).send({})
+  response.status(statusCode).send()
 });
