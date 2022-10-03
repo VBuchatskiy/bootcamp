@@ -1,7 +1,8 @@
 import { CastError } from "mongoose";
 
 interface CustomError extends CastError {
-  status: number
+  status?: number
+  code?: number
 }
 
 export {

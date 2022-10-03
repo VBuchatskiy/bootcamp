@@ -4,7 +4,7 @@ export {
   createBootcamp,
   updateBootcamp,
   deleteBootcamp,
-} from "./bootcamps";
+} from "./bootcamp";
 
 export {
   getCourses,
@@ -12,4 +12,4 @@ export {
   createCourse,
   updateCourse,
   deleteCourse,
-} from "./courses";
+} from "./course";

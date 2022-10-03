@@ -1,3 +1,3 @@
 export { auth } from './auth'
-export { bootcamps } from './bootcamps'
-export { courses } from './courses'
+export { bootcamps } from './bootcamp'
+export { courses } from './course'
