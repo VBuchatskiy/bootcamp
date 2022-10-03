@@ -38,7 +38,7 @@
     "eslint": "^8.0.1",
     "eslint-loader": "^3.0.4",
     "lodash": "^4.17.21",
-    "nodemon-webpack-plugin": "^4.5.2",
+    "nodemon-webpack-plugin": "^4.8.1",
     "ts-loader": "^8.1.0",
     "ts-node": "^9.1.1",
     "tsconfig-paths-webpack-plugin": "^4.0.0",
