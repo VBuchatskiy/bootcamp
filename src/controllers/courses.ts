@@ -1,35 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
-import { asyncHandler } from "../middleware";
-import { Course } from "../models";
-import { parseSortParams, parseSelectParams, parsePaginationParams, parseFilterParams } from "../utils"
+import { async } from "@/middleware";
+import { Course } from "@/models";
 
 // @desc Get Courses
 // @route GET /api/v1/bootcamps/:bootcampId/courses
 // @sort sort sort=name%asc+age%desc
 // @access public
 
-export const getCourses = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
-  const itemCount: number = await Course.count()
+export const getCourses = async(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
-  const { query } = request
-  const { offset, limit, pageCount } = parsePaginationParams(query, itemCount)
 
-  const items = await Course
-    .find(query.bid ? { bootcamp: query.bid } : {})
-    .find(query.filter ? parseFilterParams(query.sort as string) : {})
-    .populate(!query.bid ? {
-      path: 'bootcamp',
-      select: 'name'
-    } : '')
-    .skip(offset)
-    .limit(limit)
-    .sort(query.sort ? parseSortParams(query.sort as string) : [])
-    .select(query.select ? parseSelectParams(query.select as string) : [])
+  const courses = await Course
+    .find()
 
   response.status(statusCode).json({
-    items,
-    itemCount,
-    pageCount
+    courses
   });
 });
 
@@ -37,7 +22,7 @@ export const getCourses = asyncHandler(async (request: Request, response: Respon
 // @route Get /api/v1/courses/:id
 // @access public
 
-export const getCourse = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+export const getCourse = async(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { params } = request
   const { id } = params
@@ -53,7 +38,7 @@ export const getCourse = asyncHandler(async (request: Request, response: Respons
 // @route Post /api/v1/courses
 // @access private
 
-export const createCourse = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+export const createCourse = async(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { body } = request;
 
@@ -69,7 +54,7 @@ export const createCourse = asyncHandler(async (request: Request, response: Resp
 // @access private
 
 
-export const updateCourse = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+export const updateCourse = async(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { body } = request;
   const { params } = request
@@ -89,7 +74,7 @@ export const updateCourse = asyncHandler(async (request: Request, response: Resp
 // @route Post /api/v1/courses
 // @access private
 
-export const deleteCourse = asyncHandler(async (request: Request, response: Response, next: NextFunction) => {
+export const deleteCourse = async(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { params } = request
   const { id } = params

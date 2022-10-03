@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { CastError } from "mongoose";
+import { CustomError } from "./types";
 
-export const errorHandler = (error: CastError, request: Request, response: Response, next: NextFunction) => {
-  const { name, message } = error
-  const { params } = request
-  const { statusCode } = response
+export const error = (error: CustomError, request: Request, response: Response, next: NextFunction) => {
+  const { message, status } = error
 
-  response.status(statusCode).json({ name, message, params })
+  response.status(status || 400).json({ status: status || 400, message })
 }

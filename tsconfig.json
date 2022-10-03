@@ -4,20 +4,30 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "resolveJsonModule": true,
+    "removeComments": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
     "rootDir": "./",
     "sourceMap": true,
     "outDir": "./build",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "strict": true,
     "paths": {
       "*": [
-        "node_modules/*"
+        "node_modules/*",
+      ],
+      "@/*": [
+        "./src/*"
+      ],
+      "~/*": [
+        "*"
       ]
-    }
+    },
   },
   "include": [
     "src/**/*"
+  ],
+  "exclude": [
+    "node_modules"
   ]
 }

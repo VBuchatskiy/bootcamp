@@ -1,6 +1,7 @@
 import externals from 'webpack-node-externals'
 import nodemon from 'nodemon-webpack-plugin'
 import dotenv from 'dotenv-webpack'
+import tsconfig from 'tsconfig-paths-webpack-plugin'
 import { resolve } from 'path'
 
 const paths = {
@@ -12,19 +13,23 @@ const paths = {
   output: resolve(__dirname, 'build')
 }
 
+const NODE_ENV = 'development'
+
 export default {
-  mode: 'development',
+  mode: NODE_ENV,
+  externalsPresets: { node: true },
   externals: externals(),
-  target: 'node',
   entry: {
     server: paths.entry.server
   },
   output: {
     filename: '[name].js',
-    path: paths.output
+    path: paths.output,
+    publicPath: 'build',
   },
   resolve: {
     modules: [paths.entry.root, 'node_modules'],
+    plugins: [new tsconfig()],
     extensions: ['js', '.ts', '.json'],
     alias: {
       '~': paths.entry.root,
@@ -53,15 +58,16 @@ export default {
   },
   stats: {
     colors: true,
-    env: true
+    env: true,
+    warnings:false
   },
   plugins: [
     new nodemon({
       env: {
-        NODE_ENV: 'development',
+        NODE_ENV,
       },
     }),
-    new dotenv()
+    new dotenv(),
   ],
   watchOptions: {
     ignored: /node_modules/

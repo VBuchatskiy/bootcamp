@@ -1,14 +1,7 @@
 import { Schema, model } from "mongoose";
+import { TBootcamp } from "./types";
 
-interface IBootcamp {
-  slug: string;
-  name: string;
-  description: string;
-  create_at: number
-}
-
-const BootcampSchema = new Schema<IBootcamp>({
-  slug: String,
+const BootcampSchema = new Schema<TBootcamp>({
   name: {
     type: String,
     trim: true,

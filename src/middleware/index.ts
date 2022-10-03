@@ -1,3 +1,3 @@
 export { logger } from './logger'
-export { errorHandler } from './error'
-export { asyncHandler } from './async'
+export { error } from './error'
+export { async } from './async'
