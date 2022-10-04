@@ -7,10 +7,10 @@
     "removeComments": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
-    "rootDir": "./",
+    "rootDir": ".",
     "sourceMap": true,
     "outDir": "./build",
-    "baseUrl": "./",
+    "baseUrl": ".",
     "strict": true,
     "paths": {
       "*": [
@@ -24,10 +24,6 @@
       ]
     },
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
