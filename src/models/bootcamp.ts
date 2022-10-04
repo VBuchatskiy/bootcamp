@@ -34,7 +34,7 @@ const BootcampSchema = new Schema<IBootcamp>({
 })
 
 BootcampSchema.pre('remove', async function(next) {
-  await this.model('Course').deleteMany({ bid: this._id })
+  await this.$model('Course').deleteMany({ bid: this._id })
   next()
 })
 
