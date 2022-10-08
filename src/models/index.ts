@@ -1,2 +1,3 @@
-export { Bootcamp } from './bootcamp'
-export { Course } from './course'
+export { Bootcamp } from './Bootcamp'
+export { Course } from './Course'
+export { User } from './User'
