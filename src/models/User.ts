@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
-import { IBootcamp } from "./types";
+import { IUser } from "./types";
 
-const BootcampSchema = new Schema<IBootcamp>({
+const UserSchema = new Schema<IUser>({
   name: {
     type: String,
     trim: true,
@@ -9,18 +9,29 @@ const BootcampSchema = new Schema<IBootcamp>({
     required: [true, 'Pleas provide a name'],
     maxlength: [50, 'Name can`t be more than 50 characters']
   },
-  description: {
+  email: {
     type: String,
-    required: [true, 'Pleas provide a description'],
-    maxlength: [500, 'Description can`t be more than 500 characters']
+    trim: true,
+    required: [true, 'Pleas provide an email']
   },
+  password: {
+    type: String,
+    trim: true,
+    required: [true, 'Pleas provide a password'],
+    select: false
+  },
+  role: {
+    type: String,
+    enum: ['user', 'publisher'],
+    default: 'user'
+  }
 }, {
   id: false,
   toJSON: {
     virtuals: true,
     versionKey: false,
     transform(doc, ret) {
-      Object.assign(ret, { bid: doc._id })
+      Object.assign(ret, { uid: doc._id })
       delete ret._id
     }
   },
@@ -30,13 +41,8 @@ const BootcampSchema = new Schema<IBootcamp>({
   timestamps: {
     createdAt: 'create_at',
     updatedAt: 'update_at'
-  },
+  }
 })
 
-BootcampSchema.pre('remove', async function (next) {
-  await this.$model('Course').deleteMany({ bid: this._id })
-  next()
-})
-
-export const Bootcamp = model('Bootcamp', BootcampSchema)
+export const User = model('User', UserSchema)
 

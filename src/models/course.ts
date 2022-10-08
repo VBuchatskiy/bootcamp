@@ -2,6 +2,11 @@ import { Schema, model } from "mongoose";
 import { ICourse } from "./types";
 
 const CourseSchema = new Schema<ICourse>({
+  bid: {
+    type: Schema.Types.ObjectId,
+    ref: 'Bootcamp',
+    required: true
+  },
   name: {
     type: String,
     trim: true,
@@ -24,28 +29,23 @@ const CourseSchema = new Schema<ICourse>({
     required: [true, 'Pleas provide a cost'],
     min: [0, 'Cost con`t be less than 0'],
   },
-  create_at: {
-    type: Number,
-    default: Date.now()
-  },
-  bid: {
-    type: Schema.Types.ObjectId,
-    ref: 'Bootcamp',
-    required: true
-  },
 }, {
   id: false,
   toJSON: {
     virtuals: true,
     versionKey: false,
-    transform: function (doc, ret) {
-      Object.assign(ret, { cid: ret._id })
+    transform(doc, ret) {
+      Object.assign(ret, { cid: doc._id })
       delete ret._id
     }
   },
   toObject: {
     virtuals: true
   },
+  timestamps: {
+    createdAt: 'create_at',
+    updatedAt: 'update_at'
+  }
 })
 
 export const Course = model('Course', CourseSchema)
