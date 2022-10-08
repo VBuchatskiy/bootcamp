@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 import { IUser } from "./types";
 import { genSalt, hash } from "bcrypt"
+import { sign } from "jsonwebtoken"
 
 const UserSchema = new Schema<IUser>({
   name: {
@@ -11,6 +12,7 @@ const UserSchema = new Schema<IUser>({
   },
   email: {
     type: String,
+    lowercase: true,
     unique: true,
     trim: true,
     required: [true, 'Pleas provide an email']
@@ -51,6 +53,13 @@ UserSchema.pre('save', async function (next) {
   this.password = await hash(this.password, salt)
   next()
 })
+
+// @desc assign token
+UserSchema.methods.sing = function (): string {
+  return sign({ id: this._id }, process.env.JWT_SECRET || '', {
+    expiresIn: process.env.JWT_EXPIRATION_TIME || '1d'
+  })
+}
 
 export const User = model('User', UserSchema)
 

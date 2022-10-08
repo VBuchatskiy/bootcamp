@@ -15,6 +15,7 @@ interface IUser extends Document {
   email: string
   role: string[ERole]
   password: string,
+  sing: () => {}
 }
 interface IBootcamp extends Document {
   name: string;
