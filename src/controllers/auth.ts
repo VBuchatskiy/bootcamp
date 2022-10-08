@@ -14,7 +14,9 @@ export const register = async(async (request: Request, response: Response) => {
     role
   })
 
+  const token = user.sing()
+
   response.status(statusCode).json({
-    statusCode,
+    token,
   });
 });
