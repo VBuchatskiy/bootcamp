@@ -29,7 +29,7 @@ export const getBootcamp = async(async (request: Request, response: Response, ne
   const bootcamp = await Bootcamp.findById(id)
 
   if(!bootcamp) {
-    return next({ message: 'bootcamp not found' })
+    return next({ message: 'not found' })
   }
 
   response.status(statusCode).json({
@@ -68,7 +68,7 @@ export const updateBootcamp = async(async (request: Request, response: Response,
   })
 
   if (!bootcamp) {
-    return next({ message: 'bootcamp not found' })
+    return next({ message: 'not found' })
   }
 
   response.status(statusCode).json({
@@ -88,7 +88,7 @@ export const deleteBootcamp = async(async (request: Request, response: Response,
   const bootcamp = await Bootcamp.findById(id)
 
   if (!bootcamp) {
-    return next({ message: 'bootcamp not found' })
+    return next({ message: 'not found' })
   }
 
   bootcamp.remove()

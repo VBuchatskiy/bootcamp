@@ -11,23 +11,23 @@ const CourseSchema = new Schema<ICourse>({
     type: String,
     trim: true,
     unique: true,
-    required: [true, 'Pleas provide a name'],
-    maxlength: [50, 'Name can`t be more than 50 characters']
+    required: [true, 'please provide a name'],
+    maxlength: [50, 'name can`t be more than 50 characters']
   },
   description: {
     type: String,
     required: true,
-    maxlength: [500, 'Name can`t be more than 500 characters']
+    maxlength: [500, 'name can`t be more than 500 characters']
   },
   skills: {
     type: String,
-    required: [true, 'Pleas add minimum skill'],
+    required: [true, 'please add minimum skill'],
     enum: ['beginner', 'intermediate', 'advanced']
   },
   cost: {
     type: Number,
-    required: [true, 'Pleas provide a cost'],
-    min: [0, 'Cost con`t be less than 0'],
+    required: [true, 'please provide a cost'],
+    min: [0, 'cost can`t be less than 0'],
   },
 }, {
   id: false,

@@ -1,26 +1,26 @@
 import { Schema, model } from "mongoose";
 import { IUser } from "./types";
-import { genSalt, hash } from "bcrypt"
+import { genSalt, hash, compare } from "bcrypt"
 import { sign } from "jsonwebtoken"
 
 const UserSchema = new Schema<IUser>({
   name: {
     type: String,
     trim: true,
-    required: [true, 'Pleas provide a name'],
-    maxlength: [50, 'Name can`t be more than 50 characters']
+    required: [true, 'please provide a name'],
+    maxlength: [50, 'name can`t be more than 50 characters']
   },
   email: {
     type: String,
     lowercase: true,
     unique: true,
     trim: true,
-    required: [true, 'Pleas provide an email']
+    required: [true, 'please provide an email']
   },
   password: {
     type: String,
     trim: true,
-    required: [true, 'Pleas provide a password'],
+    required: [true, 'please provide a password'],
     select: false
   },
   role: {
@@ -54,11 +54,15 @@ UserSchema.pre('save', async function (next) {
   next()
 })
 
-// @desc assign token
+// @desc sing token
 UserSchema.methods.sing = function (): string {
   return sign({ id: this._id }, process.env.JWT_SECRET || '', {
     expiresIn: process.env.JWT_EXPIRATION_TIME || '1d'
   })
+}
+
+UserSchema.methods.compare = async function (password: string): Promise<boolean> {
+  return await compare(password, this.password)
 }
 
 export const User = model('User', UserSchema)
