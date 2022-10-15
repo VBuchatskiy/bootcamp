@@ -7,6 +7,7 @@ import {
   deleteBootcamp,
 } from '@/controllers'
 import { courses } from './course'
+import { protect } from '@/middleware'
 
 const bootcamps = Router()
 
@@ -15,13 +16,13 @@ bootcamps.use('/:bid/courses', courses)
 bootcamps
   .route('/')
   .get(getBootcamps)
-  .post(createBootcamp)
+  .post(protect, createBootcamp)
 
 bootcamps
   .route('/:id')
   .get(getBootcamp)
-  .put(updateBootcamp)
-  .delete(deleteBootcamp)
+  .put(protect, updateBootcamp)
+  .delete(protect, deleteBootcamp)
 
 
 export {

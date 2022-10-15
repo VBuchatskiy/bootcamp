@@ -39,4 +39,3 @@ BootcampSchema.pre('remove', async function (next) {
 })
 
 export const Bootcamp = model('Bootcamp', BootcampSchema)
-

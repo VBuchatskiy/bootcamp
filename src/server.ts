@@ -1,6 +1,7 @@
 import express, { json } from 'express'
 import cors from 'cors'
 import chalk from 'chalk'
+import cookie from "cookie-parser";
 import { connect } from '~/config'
 import { logger, error } from "@/middleware";
 import { auth, bootcamps, courses } from '@/routers'
@@ -17,6 +18,7 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(cors())
 app.use(json())
+app.use(cookie())
 
 // Mount Routes
 app.use('/api/v1/auth', auth)
