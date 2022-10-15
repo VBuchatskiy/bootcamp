@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { ObjectId, Document } from "mongoose";
 
 enum ESkills {
   beginner = 1,
@@ -19,6 +19,7 @@ interface IUser extends Document {
   compare: (password: string) => Promise<boolean>
 }
 interface IBootcamp extends Document {
+  uid: ObjectId // user id
   name: string;
   description: string;
 }
