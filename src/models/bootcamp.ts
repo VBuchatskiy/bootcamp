@@ -2,6 +2,11 @@ import { Schema, model } from "mongoose";
 import { IBootcamp } from "./types";
 
 const BootcampSchema = new Schema<IBootcamp>({
+  uid: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   name: {
     type: String,
     trim: true,
