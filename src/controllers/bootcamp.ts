@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { CustomRequest } from "./types";
 import { async } from "@/middleware";
-import { Bootcamp, User } from "@/models";
+import { Bootcamp } from "@/models";
 
 // @desc Get bootcamps
 // @route GET /api/v1/bootcamps
@@ -25,9 +25,9 @@ export const getBootcamps = async(async (request: Request, response: Response) =
 export const getBootcamp = async(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { params } = request
-  const { id } = params
+  const { bid } = params
 
-  const bootcamp = await Bootcamp.findById(id)
+  const bootcamp = await Bootcamp.findById(bid)
 
   if (!bootcamp) {
     return next({ message: 'not found' })
@@ -44,13 +44,10 @@ export const getBootcamp = async(async (request: Request, response: Response, ne
 
 export const createBootcamp = async(async (request: CustomRequest, response: Response, next: NextFunction) => {
   const { statusCode } = response
-  const { body } = request
-  const { uid } = body
-
-  const user = await User.findById(uid)
+  const { body, user } = request
 
   if (user?.role === 'user') {
-    return next({ message: 'authorized' })
+    return next({ message: 'not authorized' })
   }
 
   const bootcamp = await Bootcamp.create(body)
@@ -67,19 +64,19 @@ export const createBootcamp = async(async (request: CustomRequest, response: Res
 export const updateBootcamp = async(async (request: CustomRequest, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { body, params, user } = request
-  const { id } = params
+  const { bid } = params
 
-  let bootcamp = await Bootcamp.findById(id)
+  let bootcamp = await Bootcamp.findById(bid)
 
   if (!bootcamp) {
     return next({ message: 'not found' })
   }
 
   if (bootcamp.uid !== user?.id) {
-    return next({ message: 'authorized' })
+    return next({ message: 'not authorized' })
   }
 
-  bootcamp = await Bootcamp.findByIdAndUpdate(id, body, {
+  bootcamp = await Bootcamp.findByIdAndUpdate(bid, body, {
     new: true,
     runValidators: true
   })
@@ -96,16 +93,16 @@ export const updateBootcamp = async(async (request: CustomRequest, response: Res
 export const deleteBootcamp = async(async (request: CustomRequest, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { params, user } = request
-  const { id } = params
+  const { bid } = params
 
-  const bootcamp = await Bootcamp.findById(id)
+  const bootcamp = await Bootcamp.findById(bid)
 
   if (!bootcamp) {
     return next({ message: 'not found' })
   }
 
   if (bootcamp.uid !== user?.id) {
-    return next({ message: 'authorized' })
+    return next({ message: 'not authorized' })
   }
 
   bootcamp.remove()

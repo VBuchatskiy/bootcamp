@@ -18,7 +18,7 @@ courses
   .post(protect, createCourse)
 
 courses
-  .route('/:id')
+  .route('/:cid')
   .get(getCourse)
   .put(protect, updateCourse)
   .delete(protect, deleteCourse)

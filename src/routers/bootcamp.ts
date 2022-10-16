@@ -19,7 +19,7 @@ bootcamps
   .post(protect, createBootcamp)
 
 bootcamps
-  .route('/:id')
+  .route('/:bid')
   .get(getBootcamp)
   .put(protect, updateBootcamp)
   .delete(protect, deleteBootcamp)
