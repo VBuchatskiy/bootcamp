@@ -3,6 +3,7 @@ import { async } from "./async"
 import { verify } from 'jsonwebtoken'
 import { User } from "@/models"
 import { CustomJwtPayload } from "@/middleware/types";
+import { CustomRequest } from "@/controllers/types";
 
 
 export const protect = async(async (request: Request, response: Response, next: NextFunction) => {
@@ -28,3 +29,16 @@ export const protect = async(async (request: Request, response: Response, next: 
 
   return next()
 })
+
+
+export const authorized = (...roles: Array<string>) => {
+  return async(async (request: CustomRequest, response: Response, next: NextFunction) => {
+    const { user } = request
+
+    if (user && !roles.includes(user.role)) {
+      return next({ message: 'authorized' })
+    }
+
+    next()
+  })
+}

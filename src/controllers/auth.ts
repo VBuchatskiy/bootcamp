@@ -35,7 +35,7 @@ export const login = async(async (request: Request, response: Response, next: Ne
   const { email, password } = body
 
   if (!email || !password) {
-    return next({ message: 'please provide email and password' })
+    return next({ message: 'invalid credentials' })
   }
 
   const user = await User.findOne({
@@ -59,3 +59,14 @@ export const login = async(async (request: Request, response: Response, next: Ne
     token,
   });
 });
+
+export const forgot = async(async (request: Request, response: Response, next: NextFunction) => {
+  const { body } = request
+  const { email } = body
+
+  const user = User.findOne({ email })
+
+  if (!user) {
+    return next({ message: 'not found' })
+  }
+})

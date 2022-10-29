@@ -7,7 +7,7 @@ import {
   deleteBootcamp,
 } from '@/controllers'
 import { courses } from './course'
-import { protect } from '@/middleware'
+import { protect, authorized } from '@/middleware'
 
 const bootcamps = Router()
 
@@ -16,7 +16,7 @@ bootcamps.use('/:bid/courses', courses)
 bootcamps
   .route('/')
   .get(getBootcamps)
-  .post(protect, createBootcamp)
+  .post(protect, authorized('admin'), createBootcamp)
 
 bootcamps
   .route('/:bid')
