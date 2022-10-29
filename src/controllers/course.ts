@@ -53,7 +53,7 @@ export const createCourse = async(async (request: CustomRequest, response: Respo
     return next({ message: 'not found' })
   }
 
-  if (user?.role === 'user') {
+  if (user && /user/g.test(user.role)) {
     return next({ message: 'not authorized' })
   }
 

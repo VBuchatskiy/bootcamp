@@ -6,7 +6,7 @@ import {
   updateCourse,
   deleteCourse,
 } from '@/controllers'
-import { protect } from '@/middleware'
+import { protect, authorized } from '@/middleware'
 
 const courses = Router({
   mergeParams: true
@@ -15,13 +15,13 @@ const courses = Router({
 courses
   .route('/')
   .get(getCourses)
-  .post(protect, createCourse)
+  .post(protect, authorized('admin'), createCourse)
 
 courses
   .route('/:cid')
   .get(getCourse)
-  .put(protect, updateCourse)
-  .delete(protect, deleteCourse)
+  .put(protect, authorized('admin'), updateCourse)
+  .delete(protect, authorized('admin'), deleteCourse)
 
 export {
   courses

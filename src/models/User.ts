@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 import { IUser } from "./types";
 import { genSalt, hash, compare } from "bcrypt"
 import { sign } from "jsonwebtoken"
+import { randomBytes } from 'crypto'
 
 const UserSchema = new Schema<IUser>({
   name: {
@@ -25,8 +26,11 @@ const UserSchema = new Schema<IUser>({
   },
   role: {
     type: String,
-    enum: ['user', 'publisher'],
+    enum: ['user', 'admin'],
     default: 'user'
+  },
+  reset_token: {
+    type: String
   }
 }, {
   id: false,
@@ -59,6 +63,11 @@ UserSchema.methods.sing = function (): string {
   return sign({ id: this._id }, process.env.JWT_SECRET || '', {
     expiresIn: process.env.JWT_EXPIRATION_TIME || '1d'
   })
+}
+
+// @desc generate reset token
+UserSchema.methods.token = function (): string {
+  return randomBytes(20).toString('hex')
 }
 
 UserSchema.methods.compare = async function (password: string): Promise<boolean> {
