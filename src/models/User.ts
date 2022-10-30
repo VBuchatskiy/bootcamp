@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import { IUser } from "./types";
+import { createHash } from "crypto";
 import { genSalt, hash, compare } from "bcrypt"
 import { sign } from "jsonwebtoken"
 import { randomBytes } from 'crypto'
@@ -53,8 +54,14 @@ const UserSchema = new Schema<IUser>({
 
 // @desc hash password before save
 UserSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    next()
+  }
+
   const salt = await genSalt(10)
+
   this.password = await hash(this.password, salt)
+
   next()
 })
 
@@ -67,7 +74,11 @@ UserSchema.methods.sing = function (): string {
 
 // @desc generate reset token
 UserSchema.methods.token = function (): string {
-  return randomBytes(20).toString('hex')
+  const token = randomBytes(20).toString('hex')
+
+  this.reset_token = createHash('sha256').update(token).digest('hex')
+
+  return token
 }
 
 UserSchema.methods.compare = async function (password: string): Promise<boolean> {

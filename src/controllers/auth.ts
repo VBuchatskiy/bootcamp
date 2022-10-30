@@ -44,7 +44,7 @@ export const login = async(async (request: Request, response: Response, next: Ne
 
 
   if (!user) {
-    return next({ message: 'invalid email' })
+    return next({ message: 'invalid credentials' })
   }
 
   const valid = await user.compare(password)
@@ -61,12 +61,23 @@ export const login = async(async (request: Request, response: Response, next: Ne
 });
 
 export const forgot = async(async (request: Request, response: Response, next: NextFunction) => {
+  const { statusCode } = response
   const { body } = request
   const { email } = body
 
-  const user = User.findOne({ email })
+  const user = await User.findOne({ email })
 
   if (!user) {
     return next({ message: 'not found' })
   }
+
+  user.token()
+
+  await user.save({
+    validateBeforeSave: false
+  })
+
+  response.status(statusCode).json({
+    user
+  })
 })
