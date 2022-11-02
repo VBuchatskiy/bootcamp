@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { async } from "@/middleware";
 import { User } from '@/models';
-import { mailer } from '@/utils/mailer';
+import { mailer } from '@/utils';
+import { createHash } from 'crypto';
 
 // @desc Register user
 // @route POST /api/v1/auth/register
@@ -61,6 +62,10 @@ export const login = async(async (request: Request, response: Response, next: Ne
   });
 });
 
+// @desc Send reset token
+// @route POST /api/v1/auth/login
+// @access Public
+
 export const forgot = async(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { body, protocol } = request
@@ -74,7 +79,7 @@ export const forgot = async(async (request: Request, response: Response, next: N
 
   const token = user.token()
 
-  const message = `${protocol}://${request.get('host')}/api/v1/reset-password/${token}`
+  const message = `${protocol}://${request.get('host')}/reset-password/${token}`
 
   try {
     await mailer({
@@ -85,7 +90,10 @@ export const forgot = async(async (request: Request, response: Response, next: N
 
     response.status(statusCode).json({})
   } catch (error) {
-    user.reset_token = ""
+
+    Object.assign(user, {
+      reset_token: ""
+    })
 
     await user.save({
       validateBeforeSave: false
@@ -93,4 +101,37 @@ export const forgot = async(async (request: Request, response: Response, next: N
 
     return next({ message: 'can`t send message' })
   }
+})
+
+
+// @desc Reset password
+// @route POST /api/v1/auth/login
+// @access Public
+
+export const reset = async(async (request: Request, response: Response, next: NextFunction) => {
+  const { statusCode } = response
+  const { params } = request
+  const { body } = request
+  const { password } = body
+
+  const reset_token = createHash('sha256').update(params.token).digest('hex')
+
+  const user = await User.findOne({ reset_token })
+
+  if (!user) {
+    return next({ message: 'not found' })
+  }
+
+  Object.assign(user, {
+    password,
+    reset_token: ''
+  })
+
+  await user.save()
+
+  const token = user.sing()
+
+  response.status(statusCode).json({
+    token
+  })
 })
