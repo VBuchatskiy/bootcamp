@@ -72,7 +72,7 @@ export const updateBootcamp = async(async (request: CustomRequest, response: Res
     return next({ message: 'not found' })
   }
 
-  if (user && bootcamp.uid !== user.id) {
+  if (bootcamp.uid !== user?.id) {
     return next({ message: 'not authorized' })
   }
 
@@ -107,5 +107,5 @@ export const deleteBootcamp = async(async (request: CustomRequest, response: Res
 
   bootcamp.remove()
 
-  response.status(statusCode).send()
+  response.status(statusCode).json()
 }); 
