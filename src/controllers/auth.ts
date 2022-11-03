@@ -1,14 +1,59 @@
 import { Request, Response, NextFunction } from 'express';
+import { CustomRequest } from "./types";
 import { async } from "@/middleware";
 import { User } from '@/models';
 import { mailer } from '@/utils';
 import { createHash } from 'crypto';
 
+
+// @desc Get logged user
+// @route POST /api/v1/auth/register
+// @access Public
+
+export const getUser = async(async (request: CustomRequest, response: Response, next: NextFunction) => {
+  const { statusCode } = response
+  const { user } = request
+
+  const $user = await User.findOne({ email: user?.email })
+
+  if (!$user) {
+    return next({ message: 'not found' })
+  }
+
+  response.status(statusCode).json($user)
+});
+
+// @desc Update logged user
+// @route PUT /api/v1/auth/register
+// @access Public
+
+export const updateUser = async(async (request: CustomRequest, response: Response, next: NextFunction) => {
+  const { statusCode } = response
+  const { params, body } = request
+  const { uid } = params
+  const { email, name } = body
+
+
+  let user = await User.findById(uid)
+
+  if (!user) {
+    return next({ message: 'not found ' })
+  }
+
+  user = await User.findByIdAndUpdate(uid, { name, email }, {
+    new: true,
+    runValidators: true
+  })
+
+  response.status(statusCode).json(user)
+});
+
+
 // @desc Register user
 // @route POST /api/v1/auth/register
 // @access Public
 
-export const register = async(async (request: Request, response: Response) => {
+export const register = async(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
   const { body } = request
   const { name, email, password, role } = body

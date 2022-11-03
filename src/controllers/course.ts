@@ -44,8 +44,8 @@ export const getCourse = async(async (request: Request, response: Response, next
 
 export const createCourse = async(async (request: CustomRequest, response: Response, next: NextFunction) => {
   const { statusCode } = response
-  const { params, body, user } = request;
-  const { bid } = params
+  const { body, user } = request;
+  const { bid } = body
 
   const bootcamp = await Bootcamp.findById(bid)
 

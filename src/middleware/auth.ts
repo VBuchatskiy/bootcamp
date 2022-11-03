@@ -22,7 +22,7 @@ export const protect = async(async (request: Request, response: Response, next: 
   if (decode.id) {
     const user = await User.findById(decode.id)
 
-    Object.assign(request, user)
+    Object.assign(request, { user })
 
     return next()
   }
