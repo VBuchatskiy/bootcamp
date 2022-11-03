@@ -8,7 +8,7 @@ import { Bootcamp } from "@/models";
 // @sort sort sort=name%asc+age%desc
 // @access public
 
-export const getBootcamps = async(async (request: Request, response: Response) => {
+export const getBootcamps = async(async (request: Request, response: Response, next: NextFunction) => {
   const { statusCode } = response
 
   const bootcamps = await Bootcamp.find()
